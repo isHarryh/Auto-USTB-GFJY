@@ -36,4 +36,4 @@ Auto complete USTB GFJY lessons
 对于非 Windows 系统或者开发者，可[下载](https://github.com/isHarryh/Auto-USTB-GFJY/archive/refs/heads/main.zip)（或克隆）本仓库的源码。确保已安装 [Python](https://www.python.org) 3 运行环境，并安装了 Pillow、pycryptodome、requests 库（有条件者建议使用 [Poetry](https://python-poetry.org) 依赖管理工具）。最后，运行 `Main.py` 即可。
 
 ## 许可证 <sub>Licensing</sub>
-本项目基于 **MIT 开源许可证**，详情参见 [License](https://github.com/isHarryh/GI-Code-Converter/blob/main/LICENSE) 页面。
+本项目基于 **MIT 开源许可证**，详情参见 [License](https://github.com/isHarryh/Auto-USTB-GFJY/blob/main/LICENSE) 页面。
