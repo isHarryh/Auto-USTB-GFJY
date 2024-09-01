@@ -1,0 +1,6 @@
+# Exclude
+/*/
+__pycache__/
+
+# Include
+!src/
