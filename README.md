@@ -1,7 +1,7 @@
 USTB-QGXF
 ==========
 Auto complete USTB QiangGuoXianFeng series lessons  
-北京科技大学强国先锋系列课程自动代理（国防教育/DXPX）**` v2.3 `**
+北京科技大学强国先锋系列课程自动代理（国防教育/DXPX）**` v2.4 `**
 
 <sup> This project only supports Chinese docs. If you are an English user, feel free to contact us. </sup>
 
@@ -32,6 +32,7 @@ Auto complete USTB QiangGuoXianFeng series lessons
 
 ### 功能性更新日志
 
+- `v2.4` 新增了对 App ID 的初步支持。
 - `v2.3` 新增了对填空题的支持；优化了考试的交互体验。
 - `v2.2` 新增了对考试的全面支持（先前版本只支持章节测验）。
 - `v2.1` 实现了基于配置文件的记忆，支持持久化保存题库；新增了全新的终端界面，提供更好的交互体验。
@@ -58,6 +59,7 @@ Auto complete USTB QiangGuoXianFeng series lessons
 {
     "connection": {
         "baseUrl": "https://...",
+        "appId": "3",
         "token": "Ygp...bDg=="
     },
     "memory": {
@@ -82,7 +84,7 @@ Auto complete USTB QiangGuoXianFeng series lessons
 }
 ```
 
-`connection` 字段保存了上一次登录的基本信息，包括 `baseUrl`（平台的网址）和 `token`（令牌）。当这 `baseUrl` 和 `token` 都不为空时，程序运行后会验证登录信息是否有效，如果登录失效，则会回退到手动登录模式。
+`connection` 字段保存了上一次登录的基本信息，包括 `baseUrl`（平台的网址）和 `token`（令牌）。当这 `baseUrl` 和 `token` 都不为空时，程序运行后会验证登录信息是否有效，如果登录失效，则会回退到手动登录模式。在版本较新的平台中，某些请求要求附带 App ID 头部信息，其值可以在 `appId` 配置字段中手动设置。
 
 `memory` 字段中，以题目 ID 为键，保存着先前已经遇到过的题目的信息。每次课程考试结束，都会获取该次考试的参考答案，然后对 `memory` 进行增量更新。
 
