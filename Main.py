@@ -344,7 +344,14 @@ class AutoTrainer:
             Config.save_config()
         else:
             input_line.write("  已选择 是", 7)
-            Config.set("connection", {**Config.get("connection"), "baseUrl": self.api.base_url, "token": self.api.token})
+            Config.set(
+                "connection",
+                {
+                    **Config.get("connection"),
+                    "baseUrl": self.api.base_url,
+                    "token": self.api.token,
+                },
+            )
             Config.save_config()
         return True
 
@@ -645,7 +652,13 @@ if __name__ == "__main__":
                     )
                     for site in QiangGuoXianFengBaseURL.all_names()
                 }
-                input_line = STDOUT.add_line("  请输入完整的平台代码: ", 7)
+                input_line = STDOUT.add_line(
+                    [
+                        ("  请从上方选择一个", 7),
+                        ("平台代码", 6),
+                        (": ", 7),
+                    ]
+                )
                 site_code = input()
                 STDOUT.remove_line(input_line)
                 for site in site_map_lines:
