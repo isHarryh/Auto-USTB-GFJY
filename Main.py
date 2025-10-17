@@ -98,6 +98,17 @@ class QiangGuoXianFengAPI:
             page_num += 1
         return rst
 
+    def get_app_ids(self):
+        d = self._send(
+            f"{self.base_url}/trainingApi/v1/cms/banners",
+        )
+        assert isinstance(d, list)
+        app_ids = []
+        for i in d:
+            if isinstance(i, dict) and "appId" in i:
+                app_ids.append(str(i["appId"]))
+        return app_ids
+
     def get_captcha(self):
         d = self._send(
             f"{self.base_url}/trainingApi/v1/user/getCaptcha",
@@ -329,13 +340,45 @@ class AutoTrainer:
         input_line = STDOUT.add_line(f"  请选择 Y/N: ", 7)
         if input().upper() == "N":
             input_line.write("  已选择 否", 7)
-            Config.set("connection", {"baseUrl": "", "token": ""})
+            Config.set("connection", {"baseUrl": "", "token": "", "appId": ""})
             Config.save_config()
         else:
             input_line.write("  已选择 是", 7)
-            Config.set("connection", {"baseUrl": self.api.base_url, "token": self.api.token})
+            Config.set("connection", {**Config.get("connection"), "baseUrl": self.api.base_url, "token": self.api.token})
             Config.save_config()
         return True
+
+    def init_app_id(self):
+        final_app_id = None
+
+        configured_app_id = Config.get("connection").get("appId")
+        if configured_app_id is not None and configured_app_id != "":
+            final_app_id = str(configured_app_id)
+            STDOUT.add_line(f"已使用配置文件中的 App ID `{final_app_id}`", 2)
+        else:
+            try:
+                app_ids = self.api.get_app_ids()
+            except Exception:
+                STDOUT.add_line("已跳过 App ID 的在线获取", 3)
+                return
+            if not app_ids:
+                STDOUT.add_line("已跳过 App ID 的在线获取", 3)
+                return
+
+            if len(app_ids) == 1:
+                final_app_id = str(app_ids[0])
+                STDOUT.add_line(f"已自动选择 App ID `{final_app_id}`", 2)
+            else:
+                final_app_id = str(app_ids[0])
+                STDOUT.add_line("您在平台中有多个 App ID 存在", 3)
+                STDOUT.add_line(f"  这些 App ID 是 {app_ids}", 7)
+                STDOUT.add_line("  为防止误操作，已跳过 App ID 的配置环节", 7)
+                STDOUT.add_line("  您可以编辑配置文件来手动配置一个 App ID", 7)
+
+        if final_app_id is not None and final_app_id != "":
+            self.api._headers["Appid"] = final_app_id
+            Config.set("connection", {**Config.get("connection"), "appId": final_app_id})
+            Config.save_config()
 
     def _watch(self, resource_id: int, start_time: str, total_time: str):
         self._now_jobs += 1
@@ -619,6 +662,8 @@ if __name__ == "__main__":
 
             auto.api.base_url = base_url
             auto.manual_login()
+
+        auto.init_app_id()
 
         # Select tasks
         do_option1 = False
